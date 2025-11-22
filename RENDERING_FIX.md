@@ -1,21 +1,56 @@
 # MuJoCo Rendering Fix
 
-## The Error
+## Common Errors
+
+### Error 1: EGL Device ID Error
 ```
 RuntimeError: The MUJOCO_EGL_DEVICE_ID environment variable must be an integer between 0 and -1 (inclusive), got 0.
 ```
 
-This happens when MuJoCo can't initialize the EGL rendering context on your system, typically in Singularity containers or headless servers where GPU rendering isn't properly configured.
+### Error 2: PyOpenGL OSMesa Error
+```
+AttributeError: 'NoneType' object has no attribute 'glGetError'
+```
 
-## Quick Solution (Recommended)
+These happen when MuJoCo can't initialize rendering, typically in Singularity containers or headless servers.
 
-The scripts now default to **OSMesa (CPU rendering)** which works reliably everywhere. Just run:
+## Solutions (Try in Order)
 
+### Solution 1: Install Required Packages
+
+First, try installing the necessary Python packages:
+
+```bash
+.venv/bin/pip install PyOpenGL PyOpenGL-accelerate
+```
+
+Then run:
 ```bash
 ./quick_train.sh
 ```
 
-The training will use CPU rendering for the camera observations. This is slightly slower than GPU rendering but works consistently across all systems.
+### Solution 2: Install System OSMesa Libraries
+
+If Solution 1 doesn't work, install system OSMesa libraries:
+
+```bash
+# Ubuntu/Debian (requires sudo/admin access)
+sudo apt-get update
+sudo apt-get install libosmesa6-dev libgl1-mesa-glx libglew-dev
+
+# Then try again
+./quick_train.sh
+```
+
+### Solution 3: Set Environment Variables Manually
+
+Try setting both required environment variables:
+
+```bash
+export MUJOCO_GL=osmesa
+export PYOPENGL_PLATFORM=osmesa
+./quick_train.sh
+```
 
 ## Alternative: Force OSMesa
 
