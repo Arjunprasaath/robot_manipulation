@@ -3,6 +3,7 @@ import os
 # This must be done before any mujoco-related imports
 if 'MUJOCO_GL' not in os.environ and 'MUJOCO_EGL_DEVICE_ID' not in os.environ:
     os.environ['MUJOCO_GL'] = 'osmesa'
+    os.environ['PYOPENGL_PLATFORM'] = 'osmesa'  # Tell PyOpenGL to use OSMesa
     print("Using OSMesa (CPU) rendering for MuJoCo")
 
 import numpy as np

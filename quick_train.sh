@@ -13,6 +13,7 @@ echo ""
 if [ -z "$MUJOCO_GL" ] && [ -z "$MUJOCO_EGL_DEVICE_ID" ]; then
     echo "Setting default rendering backend to OSMesa (CPU rendering)..."
     export MUJOCO_GL=osmesa
+    export PYOPENGL_PLATFORM=osmesa
     echo "Using OSMesa (CPU) rendering for better server compatibility"
 fi
 
