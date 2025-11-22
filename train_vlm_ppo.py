@@ -1,8 +1,14 @@
+import os
+# IMPORTANT: Set rendering backend BEFORE importing robosuite/mujoco
+# This must be done before any mujoco-related imports
+if 'MUJOCO_GL' not in os.environ and 'MUJOCO_EGL_DEVICE_ID' not in os.environ:
+    os.environ['MUJOCO_GL'] = 'osmesa'
+    print("Using OSMesa (CPU) rendering for MuJoCo")
+
 import numpy as np
 import torch
 import robosuite as rb
 import wandb
-import os
 from datetime import datetime
 from rl_policy import VLMRLPolicy
 from ppo_trainer import PPOTrainer
@@ -10,14 +16,6 @@ from ppo_trainer import PPOTrainer
 
 def create_env():
     """Create the robosuite environment."""
-    import os as os_module
-
-    # Default to OSMesa if no rendering backend is set
-    # This provides better compatibility across different systems
-    if 'MUJOCO_GL' not in os_module.environ and 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ:
-        os_module.environ['MUJOCO_GL'] = 'osmesa'
-        print("Using OSMesa (CPU) rendering for MuJoCo")
-
     # Create environment with offscreen renderer for camera observations
     env = rb.make(
         env_name="PickPlaceCan",
