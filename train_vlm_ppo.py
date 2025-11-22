@@ -12,45 +12,25 @@ def create_env():
     """Create the robosuite environment."""
     import os as os_module
 
-    # Set EGL device ID if running on GPU server
-    if 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ and 'MUJOCO_GL' not in os_module.environ:
-        # Default to GPU 0 if available, otherwise use OSMesa
-        os_module.environ['MUJOCO_EGL_DEVICE_ID'] = '0'
+    # Default to OSMesa if no rendering backend is set
+    # This provides better compatibility across different systems
+    if 'MUJOCO_GL' not in os_module.environ and 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ:
+        os_module.environ['MUJOCO_GL'] = 'osmesa'
+        print("Using OSMesa (CPU) rendering for MuJoCo")
 
-    try:
-        # Try with offscreen renderer (for camera observations)
-        env = rb.make(
-            env_name="PickPlaceCan",
-            robots="Panda",
-            use_camera_obs=True,
-            camera_names="robot0_eye_in_hand",
-            has_renderer=False,
-            has_offscreen_renderer=True,
-            camera_heights=256,
-            camera_widths=256,
-            control_freq=20,
-            reward_shaping=True,
-            render_gpu_device_id=0  # Use GPU 0
-        )
-    except RuntimeError as e:
-        print(f"Warning: Could not create environment with offscreen renderer: {e}")
-        print("Trying with CPU rendering...")
-
-        # Fallback: Use CPU rendering
-        os_module.environ['MUJOCO_GL'] = 'osmesa'  # Use OSMesa (CPU) rendering
-
-        env = rb.make(
-            env_name="PickPlaceCan",
-            robots="Panda",
-            use_camera_obs=True,
-            camera_names="robot0_eye_in_hand",
-            has_renderer=False,
-            has_offscreen_renderer=True,
-            camera_heights=256,
-            camera_widths=256,
-            control_freq=20,
-            reward_shaping=True
-        )
+    # Create environment with offscreen renderer for camera observations
+    env = rb.make(
+        env_name="PickPlaceCan",
+        robots="Panda",
+        use_camera_obs=True,
+        camera_names="robot0_eye_in_hand",
+        has_renderer=False,
+        has_offscreen_renderer=True,
+        camera_heights=256,
+        camera_widths=256,
+        control_freq=20,
+        reward_shaping=True
+    )
 
     return env
 

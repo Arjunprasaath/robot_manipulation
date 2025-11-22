@@ -5,53 +5,41 @@
 RuntimeError: The MUJOCO_EGL_DEVICE_ID environment variable must be an integer between 0 and -1 (inclusive), got 0.
 ```
 
-This happens when MuJoCo can't initialize the EGL rendering context on your system.
+This happens when MuJoCo can't initialize the EGL rendering context on your system, typically in Singularity containers or headless servers where GPU rendering isn't properly configured.
 
-## Solutions (Try in Order)
+## Quick Solution (Recommended)
 
-### Solution 1: Set Environment Variable (Quickest)
-
-Before running training, set the environment variable to your GPU ID (usually 0):
+The scripts now default to **OSMesa (CPU rendering)** which works reliably everywhere. Just run:
 
 ```bash
-export MUJOCO_EGL_DEVICE_ID=0
 ./quick_train.sh
 ```
 
-Or in one line:
-```bash
-MUJOCO_EGL_DEVICE_ID=0 ./quick_train.sh
-```
+The training will use CPU rendering for the camera observations. This is slightly slower than GPU rendering but works consistently across all systems.
 
-If you have multiple GPUs, check which ones are available:
-```bash
-nvidia-smi
-# Then use the GPU ID you want, e.g., export MUJOCO_EGL_DEVICE_ID=1
-```
+## Alternative: Force OSMesa
 
-### Solution 2: Use OSMesa (CPU Rendering)
-
-If Solution 1 doesn't work, use CPU rendering:
+If you still encounter issues, explicitly set OSMesa before running:
 
 ```bash
 export MUJOCO_GL=osmesa
 ./quick_train.sh
 ```
 
-Or:
-```bash
-MUJOCO_GL=osmesa .venv/bin/python train_vlm_ppo.py --mode train --total-timesteps 256 --rollout-steps 32 --no-wandb
-```
+## Alternative: Use GPU Rendering (Advanced)
 
-### Solution 3: Updated Script (Already Fixed)
-
-The updated `train_vlm_ppo.py` now has automatic fallback to CPU rendering. Just run:
+If you're on a system with proper GPU/EGL support and want faster rendering:
 
 ```bash
+export MUJOCO_EGL_DEVICE_ID=0
 ./quick_train.sh
 ```
 
-It will automatically try GPU rendering first, then fall back to CPU rendering if there are issues.
+Check available GPUs:
+```bash
+nvidia-smi
+# Then use the GPU ID you want, e.g., export MUJOCO_EGL_DEVICE_ID=1
+```
 
 ### Solution 4: Install osmesa (If Solution 2 fails)
 

@@ -9,15 +9,11 @@ echo ""
 
 # Set rendering backend (if not already set)
 # This prevents MuJoCo rendering errors
+# Using OSMesa by default for better compatibility on servers
 if [ -z "$MUJOCO_GL" ] && [ -z "$MUJOCO_EGL_DEVICE_ID" ]; then
-    echo "Setting default rendering backend..."
-    if nvidia-smi &> /dev/null; then
-        export MUJOCO_EGL_DEVICE_ID=0
-        echo "GPU detected, using EGL rendering on GPU 0"
-    else
-        export MUJOCO_GL=osmesa
-        echo "No GPU detected, using OSMesa (CPU) rendering"
-    fi
+    echo "Setting default rendering backend to OSMesa (CPU rendering)..."
+    export MUJOCO_GL=osmesa
+    echo "Using OSMesa (CPU) rendering for better server compatibility"
 fi
 
 # Run full training
