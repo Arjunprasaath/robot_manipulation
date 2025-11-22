@@ -13,9 +13,9 @@ def create_env():
     import os as os_module
 
     # Set EGL device ID if running on GPU server
-    if 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ:
-        # Try to use GPU 0, fallback to CPU rendering if issues
-        os_module.environ['MUJOCO_EGL_DEVICE_ID'] = '-1'  # -1 means auto-select
+    if 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ and 'MUJOCO_GL' not in os_module.environ:
+        # Default to GPU 0 if available, otherwise use OSMesa
+        os_module.environ['MUJOCO_EGL_DEVICE_ID'] = '0'
 
     try:
         # Try with offscreen renderer (for camera observations)
@@ -30,7 +30,7 @@ def create_env():
             camera_widths=256,
             control_freq=20,
             reward_shaping=True,
-            render_gpu_device_id=-1  # Auto-select GPU
+            render_gpu_device_id=0  # Use GPU 0
         )
     except RuntimeError as e:
         print(f"Warning: Could not create environment with offscreen renderer: {e}")

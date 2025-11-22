@@ -11,16 +11,22 @@ This happens when MuJoCo can't initialize the EGL rendering context on your syst
 
 ### Solution 1: Set Environment Variable (Quickest)
 
-Before running training, set the environment variable:
+Before running training, set the environment variable to your GPU ID (usually 0):
 
 ```bash
-export MUJOCO_EGL_DEVICE_ID=-1
+export MUJOCO_EGL_DEVICE_ID=0
 ./quick_train.sh
 ```
 
 Or in one line:
 ```bash
-MUJOCO_EGL_DEVICE_ID=-1 ./quick_train.sh
+MUJOCO_EGL_DEVICE_ID=0 ./quick_train.sh
+```
+
+If you have multiple GPUs, check which ones are available:
+```bash
+nvidia-smi
+# Then use the GPU ID you want, e.g., export MUJOCO_EGL_DEVICE_ID=1
 ```
 
 ### Solution 2: Use OSMesa (CPU Rendering)
@@ -85,12 +91,11 @@ print('OSMesa available')
 Add to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-# For headless servers (no display)
-export MUJOCO_GL=osmesa
-export MUJOCO_EGL_DEVICE_ID=-1
+# For headless servers with GPU
+export MUJOCO_EGL_DEVICE_ID=0
 
-# For systems with GPU
-export MUJOCO_EGL_DEVICE_ID=-1
+# For headless servers without GPU (CPU rendering)
+export MUJOCO_GL=osmesa
 ```
 
 Then reload:

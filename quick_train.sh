@@ -12,8 +12,8 @@ echo ""
 if [ -z "$MUJOCO_GL" ] && [ -z "$MUJOCO_EGL_DEVICE_ID" ]; then
     echo "Setting default rendering backend..."
     if nvidia-smi &> /dev/null; then
-        export MUJOCO_EGL_DEVICE_ID=-1
-        echo "GPU detected, using EGL rendering"
+        export MUJOCO_EGL_DEVICE_ID=0
+        echo "GPU detected, using EGL rendering on GPU 0"
     else
         export MUJOCO_GL=osmesa
         echo "No GPU detected, using OSMesa (CPU) rendering"
