@@ -226,3 +226,35 @@ After training:
 3. Fine-tune hyperparameters
 4. Try longer training runs
 5. Experiment with different reward functions
+
+## CUDA/GPU Support
+
+**Yes! The training fully supports CUDA (NVIDIA GPUs).**
+
+### Automatic GPU Detection
+The system automatically detects and uses CUDA when available:
+```bash
+# Will use CUDA if available
+.venv/bin/python train_vlm_ppo.py --mode train
+```
+
+### Manual Device Selection
+```bash
+# Force CUDA
+.venv/bin/python train_vlm_ppo.py --mode train --device cuda
+
+# Force CPU (for debugging)
+.venv/bin/python train_vlm_ppo.py --mode train --device cpu
+```
+
+### Performance on CUDA
+- **~10-15x faster** than CPU
+- Uses FP16 for memory efficiency
+- Supports multi-GPU via automatic device mapping
+
+### Check CUDA Availability
+```bash
+.venv/bin/python -c "import torch; print('CUDA:', torch.cuda.is_available())"
+```
+
+See **CUDA_GUIDE.md** for detailed GPU training instructions.

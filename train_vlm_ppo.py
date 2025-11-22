@@ -10,18 +10,48 @@ from ppo_trainer import PPOTrainer
 
 def create_env():
     """Create the robosuite environment."""
-    env = rb.make(
-        env_name="PickPlaceCan",
-        robots="Panda",
-        use_camera_obs=True,
-        camera_names="robot0_eye_in_hand",
-        has_renderer=False,
-        has_offscreen_renderer=True,
-        camera_heights=256,
-        camera_widths=256,
-        control_freq=20,
-        reward_shaping=True
-    )
+    import os as os_module
+
+    # Set EGL device ID if running on GPU server
+    if 'MUJOCO_EGL_DEVICE_ID' not in os_module.environ:
+        # Try to use GPU 0, fallback to CPU rendering if issues
+        os_module.environ['MUJOCO_EGL_DEVICE_ID'] = '-1'  # -1 means auto-select
+
+    try:
+        # Try with offscreen renderer (for camera observations)
+        env = rb.make(
+            env_name="PickPlaceCan",
+            robots="Panda",
+            use_camera_obs=True,
+            camera_names="robot0_eye_in_hand",
+            has_renderer=False,
+            has_offscreen_renderer=True,
+            camera_heights=256,
+            camera_widths=256,
+            control_freq=20,
+            reward_shaping=True,
+            render_gpu_device_id=-1  # Auto-select GPU
+        )
+    except RuntimeError as e:
+        print(f"Warning: Could not create environment with offscreen renderer: {e}")
+        print("Trying with CPU rendering...")
+
+        # Fallback: Use CPU rendering
+        os_module.environ['MUJOCO_GL'] = 'osmesa'  # Use OSMesa (CPU) rendering
+
+        env = rb.make(
+            env_name="PickPlaceCan",
+            robots="Panda",
+            use_camera_obs=True,
+            camera_names="robot0_eye_in_hand",
+            has_renderer=False,
+            has_offscreen_renderer=True,
+            camera_heights=256,
+            camera_widths=256,
+            control_freq=20,
+            reward_shaping=True
+        )
+
     return env
 
 
