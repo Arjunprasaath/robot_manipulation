@@ -1,0 +1,26 @@
+Creating environment...
+[1m[32m[robosuite INFO] [0mLoading controller configuration from: /Users/arjunprasaath/Projects/robot_manipulation/.venv/lib/python3.11/site-packages/robosuite/controllers/config/robots/default_panda.json (composite_controller_factory.py:121)
+[1m[32m[robosuite INFO] [0mLoading controller configuration from: /Users/arjunprasaath/Projects/robot_manipulation/.venv/lib/python3.11/site-packages/robosuite/controllers/config/robots/default_panda.json (composite_controller_factory.py:121)
+Creating VLM RL policy...
+Loading VLM for RL training on device: cpu
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:14<00:00,  7.33s/it]
+/Users/arjunprasaath/Projects/robot_manipulation/.venv/lib/python3.11/site-packages/bitsandbytes/cextension.py:34: UserWarning: The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+  warn("The installed version of bitsandbytes was compiled without GPU support. "
+'NoneType' object has no attribute 'cadam32bit_grad_fp32'
+trainable params: 4,358,144 || all params: 2,213,343,744 || trainable%: 0.1969
+LoRA applied. Trainable parameters: None
+The image processor of type `Qwen2VLImageProcessor` is now loaded as a fast processor by default, even if the model checkpoint was saved with a slow processor. This is a breaking change and may produce slightly different outputs. To continue using the slow processor, instantiate this class with `use_fast=False`. Note that this behavior will be extended to all models in a future release.
+VLM RL Policy initialized!
+Creating PPO trainer...
+
+Starting training for 2000 timesteps...
+Rollout steps: 64
+Learning rate: 3e-05
+============================================================
+
+[Update 1] Collecting rollout (64 steps)...
+[1m[32m[robosuite INFO] [0mLoading controller configuration from: /Users/arjunprasaath/Projects/robot_manipulation/.venv/lib/python3.11/site-packages/robosuite/controllers/config/robots/default_panda.json (composite_controller_factory.py:121)
+Training policy...
+/Users/arjunprasaath/Projects/robot_manipulation/ppo_trainer.py:269: UserWarning: Using a target size (torch.Size([4])) that is different to the input size (torch.Size([4, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  value_loss = F.mse_loss(batch_values, batch_returns)

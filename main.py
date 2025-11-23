@@ -46,7 +46,7 @@ vlm_controller = VLMController(model_path, action_map)
 # Create output directory for images
 os.makedirs("vlm_control_outputs", exist_ok=True)
 
-steps = 200
+steps = 300
 done = False
 previous_action = None
 cumulative_reward = 0

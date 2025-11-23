@@ -1,14 +1,37 @@
 import os
-# IMPORTANT: Set rendering backend BEFORE importing robosuite/mujoco
-# This must be done before any mujoco-related imports
-if 'MUJOCO_GL' not in os.environ and 'MUJOCO_EGL_DEVICE_ID' not in os.environ:
-    os.environ['MUJOCO_GL'] = 'osmesa'
-    os.environ['PYOPENGL_PLATFORM'] = 'osmesa'  # Tell PyOpenGL to use OSMesa
-    print("Using OSMesa (CPU) rendering for MuJoCo")
+
+# --- Rendering Backend Setup ---
+# Attempt to use OSMesa for headless rendering, with a fallback mechanism.
+# This is crucial for running in environments without a physical display.
+try:
+    # Set OSMesa as the primary backend
+    if 'MUJOCO_GL' not in os.environ and 'MUJOCO_EGL_DEVICE_ID' not in os.environ:
+        os.environ['MUJOCO_GL'] = 'osmesa'
+        os.environ['PYOPENGL_PLATFORM'] = 'osmesa'
+        print("Attempting to use OSMesa for headless rendering...")
+    
+    # Try importing robosuite, which initializes MuJoCo
+    import robosuite as rb
+    print("Successfully initialized robosuite with OSMesa.")
+
+except (AttributeError, RuntimeError) as e:
+    print(f"OSMesa rendering failed: {e}")
+    print("Falling back to default rendering backend...")
+    
+    # Unset the environment variable and try again
+    if 'MUJOCO_GL' in os.environ:
+        del os.environ['MUJOCO_GL']
+    
+    try:
+        import robosuite as rb
+        print("Successfully initialized robosuite with fallback renderer.")
+    except Exception as e_fallback:
+        print(f"Fatal: Could not initialize any rendering backend: {e_fallback}")
+        exit(1)
+# --- End of Rendering Setup ---
 
 import numpy as np
 import torch
-import robosuite as rb
 import wandb
 from datetime import datetime
 from rl_policy import VLMRLPolicy

@@ -1,0 +1,53 @@
+{
+  "os": "macOS-26.1-arm64-arm-64bit",
+  "python": "CPython 3.11.4",
+  "startedAt": "2025-11-22T23:50:06.746853Z",
+  "args": [
+    "--mode",
+    "train",
+    "--total-timesteps",
+    "2000",
+    "--rollout-steps",
+    "64",
+    "--learning-rate",
+    "3e-5",
+    "--save-freq",
+    "1000",
+    "--project-name",
+    "vlm-robot-rl-test",
+    "--run-name",
+    "quick_test_20251122_155000"
+  ],
+  "program": "/Users/arjunprasaath/Projects/robot_manipulation/train_vlm_ppo.py",
+  "codePath": "train_vlm_ppo.py",
+  "codePathLocal": "train_vlm_ppo.py",
+  "git": {
+    "remote": "https://github.com/Arjunprasaath/robot_manipulation.git",
+    "commit": "02811179edb3e42b693405ab9e45a0b21182348b"
+  },
+  "email": "arjunprasaath@gmail.com",
+  "root": "/Users/arjunprasaath/Projects/robot_manipulation",
+  "host": "pa-dhcp-10-120-231-225.gp-vpn.northwestern.private",
+  "executable": "/Users/arjunprasaath/Projects/robot_manipulation/.venv/bin/python",
+  "cpu_count": 11,
+  "cpu_count_logical": 11,
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "470537670656"
+    }
+  },
+  "memory": {
+    "total": "19327352832"
+  },
+  "apple": {
+    "name": "Apple M3 Pro",
+    "ecpuCores": 6,
+    "pcpuCores": 5,
+    "gpuCores": 14,
+    "memoryGb": 18,
+    "swapTotalBytes": "8589934592",
+    "ramTotalBytes": "19327352832"
+  },
+  "writerId": "ad2kx3njn0jhnyg3iobh7joyceo7yqlk"
+}
