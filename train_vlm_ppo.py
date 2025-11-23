@@ -1,4 +1,5 @@
 import os
+import sys
 
 # --- Rendering Backend Setup ---
 # Attempt to use OSMesa for headless rendering, with a fallback mechanism.
@@ -18,11 +19,16 @@ except (AttributeError, RuntimeError) as e:
     print(f"OSMesa rendering failed: {e}")
     print("Falling back to default rendering backend...")
     
-    # Unset the environment variables and try again
+    # Unset the environment variables
     if 'MUJOCO_GL' in os.environ:
         del os.environ['MUJOCO_GL']
     if 'PYOPENGL_PLATFORM' in os.environ:
         del os.environ['PYOPENGL_PLATFORM']
+
+    # Unload modules to allow re-initialization with a different backend
+    modules_to_unload = [m for m in sys.modules if m.startswith('OpenGL') or m.startswith('mujoco') or m.startswith('robosuite')]
+    for module in modules_to_unload:
+        del sys.modules[module]
     
     try:
         import robosuite as rb
