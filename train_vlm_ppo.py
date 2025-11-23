@@ -18,9 +18,11 @@ except (AttributeError, RuntimeError) as e:
     print(f"OSMesa rendering failed: {e}")
     print("Falling back to default rendering backend...")
     
-    # Unset the environment variable and try again
+    # Unset the environment variables and try again
     if 'MUJOCO_GL' in os.environ:
         del os.environ['MUJOCO_GL']
+    if 'PYOPENGL_PLATFORM' in os.environ:
+        del os.environ['PYOPENGL_PLATFORM']
     
     try:
         import robosuite as rb
